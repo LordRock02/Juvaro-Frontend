@@ -1,23 +1,26 @@
-// src/App.tsx
+// en: src/App.tsx
 
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import NavBar from './components/NavBar/NavBar';
+import SignIn from './components/SignIn/SignIn';
+import SignUp from './components/SignUp/SignUp'; // <--- IMPORTAMOS TU COMPONENTE REAL
 
 // Componentes de página de marcador de posición
-const LoginPage = () => <h1>Página de Login</h1>;
 const DashboardPage = () => <h2>Contenido del Dashboard</h2>;
 const VentasPage = () => <h2>Contenido de Ventas</h2>;
 const ProductosPage = () => <h2>Contenido de Productos</h2>;
 const ProduccionPage = () => <h2>Contenido de Producción</h2>;
 const UsuariosPage = () => <h2>Contenido de Usuarios</h2>;
 const MiCuentaPage = () => <h2>Contenido de Mi Cuenta</h2>;
+// const SignUpPage = () => <h1>Página de Registro</h1>; // Ya no necesitamos el placeholder
 
 function App() {
   return (
       <BrowserRouter>
         <Routes>
-          {/* Ruta pública */}
-          <Route path='/login' element={<LoginPage />} />
+          {/* Rutas públicas */}
+          <Route path='/login' element={<SignIn />} />
+          <Route path='/register' element={<SignUp />} /> {/* <--- USAMOS EL COMPONENTE REAL */}
           
           {/* Rutas anidadas que usan el NavBar como layout */}
           <Route path='/' element={<NavBar />}>

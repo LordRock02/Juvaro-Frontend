@@ -1,17 +1,40 @@
-@import url("https://fonts.googleapis.com/css?family=Montserrat:500");
+/* src/components/ui/NavBar.css */
+
+/* --- PASO 1: Reseteo Básico de CSS --- */
+/* Esto elimina márgenes y paddings por defecto del navegador */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+}
+
+/* --- Estilos para el Layout Principal (sin cambios) --- */
+.layout-container {
+  display: flex;       
+  height: 100vh;       
+}
+
+.content-area {
+  flex-grow: 1;        
+  padding: 2rem;       
+  overflow-y: auto;    
+}
+
+/* --- CAMBIOS EN LA BARRA DE NAVEGACIÓN --- */
 
 nav {
-  /* position: fixed; */
   min-width: 300px;
-  min-height: 100vh;
-  height: auto;
+  height: 100vh; 
   background: linear-gradient(135deg, #f75959 0%, #f35587 100%);
+  
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  flex-direction: column; 
+  
+  /* Aplicamos el padding aquí para controlar el espacio interior */
+  padding: 1rem; 
   z-index: 1;
-  padding: .2rem 0 1rem 1rem;
 }
+
 nav .logo {
   display: flex;
   align-items: center;
@@ -20,59 +43,78 @@ nav .logo {
   color: #fff;
   text-decoration: none;
   font-size: 20px;
-  width: 30%;
-  margin: 5% auto;
+  padding: 1rem 0; 
   cursor: pointer;
   transition: all 0.5s;
+  flex-shrink: 0; 
 }
+
 nav .logo .icono {
   font-size: 70px;
   margin-right: 5px;
 }
+
 nav .logo:hover {
-  transform: scale(1.1);
+  transform: scale(1.01);
 }
+
 .nav__links {
+  flex-grow: 1;          
+  overflow-y: auto;       
+  
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  height: 80%;
-  padding: 25px 0;
+  padding-top: 25px; /* Solo un poco de espacio arriba */
   gap: 1rem;
+  /* Eliminamos el margin-left de aquí */
 }
-.nav__links a{
+
+/* Estilo para la barra de scroll */
+.nav__links::-webkit-scrollbar {
+  width: 8px;
+}
+.nav__links::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.nav__links a {
   text-decoration: none;
 }
+
 .option {
   color: #fff;
   text-decoration: none;
   list-style: none;
   width: 100%;
-  /* height: 50px; */
   display: flex;
-  /* margin: 0 0 10% 10%; */
-  padding: 1.5rem 0 1.5rem 2rem;
+  padding: 1rem 2rem; /* Padding uniforme */
   justify-content: flex-start;
   align-items: center;
-  /* padding: 20px; */
   font-size: 20px;
-  border-top-left-radius: 50px;
-  border-bottom-left-radius: 50px;
+  border-radius: 50px; /* Hacemos el radio completo */
   transition: 0.5s;
+  flex-shrink: 0; 
 }
+
 .unselected:hover {
-  /* background-color: blue; */
   color: black;
   transform: scale(1.01);
 }
+
 .option .icono {
   font-size: 30px;
   margin-right: 15px;
 }
+
 .nav__links .selected {
   background-color: #fff;
   color: black;
   cursor: default;
-  /* padding: 1rem 0rem 1rem 1rem; */
+}
+
+/* Contenedor de los botones inferiores */
+nav > div {
+    flex-shrink: 0; /* Evita que este contenedor se encoja */
+    /* Eliminamos el margin-left */
 }
