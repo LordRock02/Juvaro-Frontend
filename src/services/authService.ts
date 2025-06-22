@@ -1,40 +1,46 @@
-// en: src/services/authService.ts
+import { ApiClientService } from '../api/ApiClientService'; 
 
-// Esta es la estructura que esperamos que el backend nos devuelva
-export interface AuthResponse {
-    nombre: string;
-    apellido: string;
-    rol: 'ROLE_ADMIN' | 'ROLE_USER';
-    token: string;
-}
+import type { 
+    LoginCredentials, 
+    AuthResponse, 
+    RegisterCredentials, 
+    UserData 
+} from './authService.types'; 
 
-// Simulación de la función de inicio de sesión
-export const iniciarSesionUsuario = (credentials: any): Promise<AuthResponse> => {
-    console.log("Simulando inicio de sesión para:", credentials.email);
-
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            // Devolvemos datos falsos para la prueba
-            const fakeResponse: AuthResponse = {
-                nombre: "Usuario",
-                apellido: "Prueba",
-                rol: 'ROLE_ADMIN', // Puedes cambiarlo a 'ROLE_USER' para probar permisos
-                token: "jwt-token-de-prueba-12345"
-            };
-            console.log("Servicio Mock: Devolviendo respuesta exitosa", fakeResponse);
-            resolve(fakeResponse);
-        }, 1000);
-    });
+// --- FUNCIÓN DE LOGIN ---
+export const iniciarSesionUsuario = async (credentials: LoginCredentials): Promise<AuthResponse> => {
+    console.log("Enviando credenciales de login:", credentials);
+    try {
+        const apiService = ApiClientService.getInstance();
+        const response = await apiService.axiosInstance.post<AuthResponse>('/auth/login', {
+            email: credentials.email,
+            password: credentials.password
+        });
+        console.log("Respuesta de login recibida:", response.data);
+        return response.data;
+    } catch (error: any) {
+        console.error('Error en el servicio de inicio de sesión:', error.response?.data || error.message);
+        throw error;
+    }
 };
 
+export const registrarUsuario = async (credentials: RegisterCredentials): Promise<UserData> => {
+    console.log("Enviando datos de registro al backend:", credentials);
+    try {
+        const apiService = ApiClientService.getInstance();
 
-export const registrarUsuario = (userData: any): Promise<{ succes: boolean, error?: string }> => {
-    console.log("Simulando registro para el usuario:", userData.email);
-    
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            // Simulamos una respuesta exitosa
-            resolve({ succes: true });
-        }, 1000);
-    });
+        const requestBody = {
+            ...credentials,
+            fechaRegistro: new Date().toISOString().split('T')[0] // Formato "yyyy-MM-dd"
+        };
+        
+        const response = await apiService.axiosInstance.post<UserData>('/auth/register', requestBody);
+
+        console.log("Respuesta de registro recibida:", response.data);
+        return response.data;
+
+    } catch (error: any) {
+        console.error('Error en el servicio de registro:', error.response?.data || error.message);
+        throw error;
+    }
 };

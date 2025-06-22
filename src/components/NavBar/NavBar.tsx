@@ -1,83 +1,69 @@
 // src/components/ui/NavBar.tsx
 
-import { Outlet, useNavigate, Link } from 'react-router-dom';
-import './NavBar.css'; // Asegúrate de que esta línea esté presente
+
+import { Outlet, Link } from 'react-router-dom';
+// 1. Importamos el nuevo hook 'useAuth'
+import { useAuth } from '../../context/AuthContext'; 
+import './NavBar.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-    faChartLine, faBoxOpen, faShoppingCart, faIndustry, 
-    faUsers, faUser, faRightFromBracket
-} from '@fortawesome/free-solid-svg-icons';
-import {faDigg } from '@fortawesome/free-brands-svg-icons';
-import { useEffect, useState } from 'react';
+import * as freeSolidSvgIcons from '@fortawesome/free-solid-svg-icons';
+import { faDigg } from '@fortawesome/free-brands-svg-icons';
+import React from 'react'; // Ya no se necesitan useEffect ni useState para la sesión
 
-// Simulación del Contexto Global
-const useIntegraStates = () => ({
-  state: {
-    userData: { rol: 'ROLE_ADMIN' } 
-  },
-  dispatch: (action: any) => console.log('Dispatching:', action)
-});
+const NavBar: React.FC = () => {
+    // 2. Leemos el estado y las acciones directamente del contexto (nuestro Mediador)
+    // Ya no necesitamos estado local (useState) para isLoggedIn o user.
+    const { isLoggedIn, currentUser, logout } = useAuth();
 
-interface BtnState {
-  [key: string]: 'selected' | 'unselected';
-}
-
-const NavBar = () => {
-    const initialBtnState: BtnState = {
-        "dashboard": "unselected", "ventas": "unselected", "productos": "unselected",
-        "produccion": "unselected", "usuarios": "unselected", "mi-cuenta": "unselected",
+    // 3. La función de logout ahora es mucho más simple
+    const handleLogout = () => {
+        // El NavBar solo le dice al mediador que cierre la sesión.
+        logout();
+        // No necesita navegar, el componente ProtectedRoutes se encargará de ello reactivamente.
     };
 
-    const [btnSelected, setBtnSelected] = useState<BtnState>(initialBtnState);
-    const { state, dispatch } = useIntegraStates();
-    const navigate = useNavigate();
+    // Ya no se necesita el bloque useEffect para suscribirse,
+    // el contexto de React maneja las actualizaciones automáticamente.
 
-    useEffect(() => {
-        setBtnSelected(prev => ({ ...prev, "dashboard": "selected" }));
-        navigate('/dashboard'); 
-    }, []);
-
-    const handleClick = (buttonName: string) => {
-        const newState = { ...initialBtnState, [buttonName]: "selected" } as BtnState;
-        setBtnSelected(newState);
-        navigate(buttonName);
-    };
-
-    const cerrarSesion = () => {
-        console.log("Cerrando sesión...");
-        navigate('/login');
-    };
-
-    // ----- CAMBIO PRINCIPAL: Envolvemos todo en un div con una clase -----
     return (
         <div className="layout-container">
-            <nav>
+            <nav className="navbar">
                 <Link to='/dashboard' className='logo'><FontAwesomeIcon icon={faDigg} className='icono' /><strong>JUVARO S.A.</strong></Link>
                 
                 <ul className="nav__links">
-                    <Link to='/dashboard' className={`option ${btnSelected['dashboard']}`} onClick={() => handleClick('dashboard')} ><FontAwesomeIcon icon={faChartLine} className='icono'/>Dashboard</Link>
-                    <Link to='/ventas' className={`option ${btnSelected['ventas']}`} onClick={() => handleClick('ventas')} ><FontAwesomeIcon icon={faShoppingCart} className='icono'/>Ventas</Link>
-                    <Link to='/productos' className={`option ${btnSelected['productos']}`} onClick={() => handleClick('productos')} ><FontAwesomeIcon icon={faBoxOpen} className='icono' />Productos</Link>
+                    {/* El resto de tus links no cambian */}
+                    <Link to='/dashboard' className='option'><FontAwesomeIcon icon={freeSolidSvgIcons.faChartLine} className='icono'/>Dashboard</Link>
+                    <Link to='/ventas' className='option'><FontAwesomeIcon icon={freeSolidSvgIcons.faShoppingCart} className='icono'/>Ventas</Link>
+                    <Link to='/productos' className='option'><FontAwesomeIcon icon={freeSolidSvgIcons.faBoxOpen} className='icono' />Productos</Link>
                     
-                    {state.userData?.rol === 'ROLE_ADMIN' && (
+                    {/* La lógica condicional sigue funcionando igual, pero ahora es más robusta */}
+                    {isLoggedIn && currentUser?.rol === 'ROLE_ADMIN' && (
                         <>
-                            <Link to='/produccion' className={`option ${btnSelected['produccion']}`} onClick={() => handleClick('produccion')}><FontAwesomeIcon icon={faIndustry} className='icono' />Producción</Link>
-                            <Link to='/usuarios' className={`option ${btnSelected['usuarios']}`} onClick={() => handleClick('usuarios')}><FontAwesomeIcon icon={faUsers} className='icono' />Usuarios</Link>
+                            <Link to='/produccion' className='option'><FontAwesomeIcon icon={freeSolidSvgIcons.faIndustry} className='icono' />Producción</Link>
+                            <Link to='/usuarios' className='option'><FontAwesomeIcon icon={freeSolidSvgIcons.faUsers} className='icono' />Usuarios</Link>
                         </>
                     )}
                 </ul>
                 
-                <div>
-                    <Link to='/mi-cuenta' className={`option ${btnSelected['mi-cuenta']}`} onClick={() => handleClick('mi-cuenta')} ><FontAwesomeIcon icon={faUser} className='icono'/>Mi Cuenta</Link>
-                    <Link to='/login' className="option unselected" onClick={cerrarSesion} ><FontAwesomeIcon icon={faRightFromBracket} className='icono' />Cerrar Sesión</Link>
+                <div className="nav__footer">
+                    {isLoggedIn ? (
+                        <>
+                            <Link to='/mi-cuenta' className='option'><FontAwesomeIcon icon={freeSolidSvgIcons.faUser} className='icono'/>{currentUser?.nombre || 'Mi Cuenta'}</Link>
+                            <a className="option unselected" onClick={handleLogout} style={{cursor: 'pointer'}}>
+                                <FontAwesomeIcon icon={freeSolidSvgIcons.faRightFromBracket} className='icono' />Cerrar Sesión
+                            </a>
+                        </>
+                    ) : (
+                        // Este bloque casi nunca se mostrará gracias a ProtectedRoutes
+                        <Link to='/login' className="option unselected"><FontAwesomeIcon icon={freeSolidSvgIcons.faRightFromBracket} className='icono' />Iniciar Sesión</Link>
+                    )}
                 </div>
             </nav>
-
             <main className="content-area">
                 <Outlet />
             </main>
         </div>
-    )
+    );
 }
 
 export default NavBar;

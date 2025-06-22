@@ -1,40 +1,35 @@
-// en: src/components/SignIn/SignIn.tsx
+// En: src/components/SignIn/SignIn.tsx
 
 import { useNavigate } from 'react-router-dom';
-// --- CORRECCIÓN 1: Rutas ajustadas a tu estructura de carpetas ---
-// Desde 'src/components/SignIn/' necesitamos subir un nivel a 'components/'
-// y otro a 'src/' antes de entrar a 'services/' o 'lib/'.
-import { iniciarSesionUsuario, type AuthResponse } from '../../services/authService';
+import { iniciarSesionUsuario } from '../../services/authService';
+import type { LoginCredentials } from '../../services/authService.types';
 import { validarSignInForm } from '../../lib/validation';
 
-// --- CORRECCIÓN 2: Se importa el tipo correcto 'ToastPosition' y el CSS ---
+// 1. Importamos el nuevo hook 'useAuth'
+import { useAuth } from '../../context/AuthContext'; 
+
 import { ToastContainer, toast, type ToastPosition } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './SignIn.css'; // Asegúrate que este archivo esté en la misma carpeta
+import './SignIn.css';
 
-import { useEffect, useState } from 'react';
-
-// Simulación del Contexto que usaremos más adelante
-const useIntegraStates = () => ({
-  dispatch: (action: any) => console.log('AuthContext Dispatch:', action)
-});
+import { useEffect, useState, type FormEvent } from 'react';
 
 const SignIn = () => {
     const navigate = useNavigate();
-    const { dispatch } = useIntegraStates();
+    // 2. Obtenemos la acción 'login' y el estado del contexto (nuestro Mediador)
+    const { login, isLoggedIn } = useAuth();
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<LoginCredentials>({
         email: '',
-        contraseña: ''
+        password: '' // Usamos 'password' para ser consistentes
     });
-
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [isLoading, setIsLoading] = useState(false);
 
-    // --- CORRECCIÓN 3: Usamos el tipo 'ToastPosition' que es el correcto ---
-    const notify = (orden: 'success' | 'error', mensaje: string, posicion: ToastPosition) => {
-        const options = { position: posicion, autoClose: 1000 };
+    const notify = (orden: 'success' | 'error', mensaje: string, posicion: ToastPosition = 'top-right') => {
+        const options = { position: posicion, autoClose: 1500 };
         if (orden === 'success') {
-            toast.success(mensaje, { ...options, autoClose: 500, onClose: () => navigate('/dashboard') });
+            toast.success(mensaje, { ...options, autoClose: 1000, onClose: () => navigate('/dashboard') });
         } else {
             toast.error(mensaje, options);
         }
@@ -44,35 +39,34 @@ const SignIn = () => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const validationErrors = validarSignInForm(formData);
         setErrors(validationErrors);
 
         if (Object.keys(validationErrors).length === 0) {
-            iniciarSesionUsuario(formData)
-                .then((response: AuthResponse) => {
-                    dispatch({ type: 'SET_USER_INFO', payload: response });
-                    dispatch({ type: 'SET_TOKEN', payload: response.token });
-                    localStorage.setItem('info_usuario', JSON.stringify(response));
-                    localStorage.setItem('token', response.token);
-                    notify('success', '¡Login exitoso!', 'top-right');
-                })
-                .catch((err) => {
-                    console.error(err);
-                    notify('error', 'Error en el inicio de sesión', 'top-right');
-                });
+            setIsLoading(true);
+            try {
+                const response = await iniciarSesionUsuario(formData);
+                // 3. El componente solo le dice al mediador que haga el login
+                login(response);
+                notify('success', `¡Bienvenido, ${response.nombre}!`);
+            } catch (err: any) {
+                const errorMessage = err.response?.data?.message || 'Credenciales incorrectas o error en el servidor.';
+                notify('error', errorMessage);
+            } finally {
+                setIsLoading(false);
+            }
         }
     };
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
+        if (isLoggedIn) {
             navigate("/dashboard");
         }
-    }, [navigate]);
+    }, [isLoggedIn, navigate]);
 
-
+    // 4. Usamos tu estructura JSX original
     return (
         <div className='homeSignInSignUp'>
             <div className='containerSignIn'>
@@ -91,20 +85,22 @@ const SignIn = () => {
                             />
                             {errors.email && <span className="error-message">{errors.email}</span>}
                         </div>
-                        <div className={errors.contraseña ? 'error-field' : ''}>
-                            <label htmlFor="contraseña">Contraseña</label>
+                        <div className={errors.password ? 'error-field' : ''}>
+                            <label htmlFor="password">Contraseña</label>
                             <input
-                                id="contraseña"
+                                id="password"
                                 type="password"
                                 placeholder='Contraseña'
-                                value={formData.contraseña}
+                                value={formData.password}
                                 onChange={handleChange}
-                                name="contraseña"
+                                name="password" // Corregido de 'contraseña' a 'password'
                             />
-                            {errors.contraseña && <span className="error-message">{errors.contraseña}</span>}
+                            {errors.password && <span className="error-message">{errors.password}</span>}
                         </div>
                         <div>
-                            <button type="submit" className='btn-signin'>Sign In</button>
+                            <button type="submit" className='btn-signin' disabled={isLoading}>
+                                {isLoading ? 'Ingresando...' : 'Sign In'}
+                            </button>
                         </div>
                     </form>
                     <p>Forgot Password?</p>

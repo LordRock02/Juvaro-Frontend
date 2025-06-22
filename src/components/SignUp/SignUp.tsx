@@ -1,10 +1,12 @@
-// en: src/components/SignUp/SignUp.tsx
+// En: src/components/SignUp/SignUp.tsx
 
 import { useNavigate } from 'react-router-dom';
-import { registrarUsuario } from '../../services/authService';
+// Asegúrate que la ruta de importación es correcta
+import { registrarUsuario } from '../../services/authService'; 
+import type { RegisterCredentials } from '../../services/authService.types';
 import { validarSignUpForm } from '../../lib/validation';
 
-import './SignUp.css'; // Crearemos este archivo a continuación
+import './SignUp.css';
 import { ToastContainer, toast, type ToastPosition } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -12,20 +14,22 @@ import { useState } from 'react';
 
 const SignUp = () => {
     const navigate = useNavigate();
+    // 2. Obtenemos la instancia del mediador
 
     const [formData, setFormData] = useState({
         fullname: '',
         email: '',
-        contraseña: '',
+        password: '',
         cedula: '',
     });
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [isLoading, setIsLoading] = useState(false);
 
-    const notify = (orden: 'success' | 'error', mensaje: string, posicion: ToastPosition) => {
-        const options = { position: posicion, autoClose: 1000 };
+    const notify = (orden: 'success' | 'error', mensaje: string, posicion: ToastPosition = 'bottom-right') => {
+        const options = { position: posicion, autoClose: 2000 };
         if (orden === 'success') {
-            toast.success(mensaje, { ...options, autoClose: 500, onClose: () => navigate('/login') });
+            toast.success(mensaje, { ...options, onClose: () => navigate('/login') });
         } else {
             toast.error(mensaje, options);
         }
@@ -35,21 +39,33 @@ const SignUp = () => {
         setFormData({ ...formData, [event.target.name]: event.target.value });
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const validationErrors = validarSignUpForm(formData);
         setErrors(validationErrors);
 
         if (Object.keys(validationErrors).length === 0) {
-            registrarUsuario(formData)
-                .then((response) => {
-                    console.log("Respuesta del servicio de registro mock:", response);
-                    if (response.succes) {
-                        notify('success', '¡Usuario creado!', 'bottom-right');
-                    } else {
-                        notify('error', response.error || 'Ocurrió un error', 'bottom-right');
-                    }
-                });
+            setIsLoading(true);
+            const credentialsToRegister: RegisterCredentials = {
+                fullname: formData.fullname,
+                password: formData.password,
+                email: formData.email,
+                cedula: Number(formData.cedula),
+                rol: 2 // Rol de usuario por defecto
+            };
+
+            try {
+                const newUser = await registrarUsuario(credentialsToRegister);
+                // 3. Notificamos al mediador que el registro fue exitoso
+                // (Aunque en este flujo no se inicia sesión, es una buena práctica notificar)
+                console.log('SignUp notificando del nuevo usuario:', newUser);
+                notify('success', `¡Bienvenido, ${newUser.nombre}! Tu cuenta ha sido creada.`);
+            } catch (error: any) {
+                const errorMessage = error.response?.data?.message || 'Error al registrar el usuario.';
+                notify('error', errorMessage);
+            } finally {
+                setIsLoading(false);
+            }
         }
     };
 
@@ -58,68 +74,54 @@ const SignUp = () => {
             <div className='containerSignUp'>
                 <div className='containerWelcome'>
                     <div>
-                        <h2>Welcome to JUVARO</h2>
-                        <p>Do you have an account?</p>
-                        <button onClick={() => navigate('/login')}>Sign In</button>
+                        <h2>Bienvenido a JUVARO</h2>
+                        <p>¿Ya tienes una cuenta?</p>
+                        <button onClick={() => navigate('/login')}>Iniciar Sesión</button>
                     </div>
                 </div>
                 <div className='containerForm'>
-                    <h3>Sign Up</h3>
+                    <h3>Crear Cuenta</h3>
                     <form onSubmit={handleSubmit}>
+                        {/* Input para Fullname */}
                         <div className={errors.fullname ? 'error-field' : ''}>
-                            <label htmlFor="fullname">Fullname</label>
-                            <input
-                                id="fullname"
-                                type="text"
-                                placeholder='Fullname'
-                                value={formData.fullname}
-                                onChange={handleChange}
-                                name="fullname"
-                            />
+                            <label htmlFor="fullname">Nombre Completo</label>
+                            <input id="fullname" name="fullname" type="text" placeholder='Nombre Completo'
+                                value={formData.fullname} onChange={handleChange} />
                             {errors.fullname && <span className="error-message">{errors.fullname}</span>}
                         </div>
+                        
+                        {/* Input para Email */}
                         <div className={errors.email ? 'error-field' : ''}>
                             <label htmlFor="email">Email</label>
-                            <input
-                                id="email"
-                                type="email"
-                                placeholder='Email'
-                                value={formData.email}
-                                onChange={handleChange}
-                                name="email"
-                            />
+                            <input id="email" name="email" type="email" placeholder='Email'
+                                value={formData.email} onChange={handleChange} />
                             {errors.email && <span className="error-message">{errors.email}</span>}
                         </div>
-                        <div className={errors.contraseña ? 'error-field' : ''}>
-                            <label htmlFor="contraseña">Contraseña</label>
-                            <input
-                                id="contraseña"
-                                type="password"
-                                placeholder='Contraseña'
-                                value={formData.contraseña}
-                                onChange={handleChange}
-                                name="contraseña"
-                            />
-                            {errors.contraseña && <span className="error-message">{errors.contraseña}</span>}
+                        
+                        {/* Input para Password (antes contraseña) */}
+                        <div className={errors.password ? 'error-field' : ''}>
+                            <label htmlFor="password">Contraseña</label>
+                            <input id="password" name="password" type="password" placeholder='Contraseña'
+                                value={formData.password} onChange={handleChange} />
+                            {errors.password && <span className="error-message">{errors.password}</span>}
                         </div>
+
+                        {/* Input para Cédula */}
                         <div className={errors.cedula ? 'error-field' : ''}>
                             <label htmlFor="cedula">Cédula</label>
-                            <input
-                                id="cedula"
-                                type="text"
-                                placeholder='Cédula'
-                                value={formData.cedula}
-                                onChange={handleChange}
-                                name="cedula"
-                            />
+                            <input id="cedula" name="cedula" type="number" placeholder='Cédula'
+                                value={formData.cedula} onChange={handleChange} />
                             {errors.cedula && <span className="error-message">{errors.cedula}</span>}
                         </div>
+                        
                         <div>
-                            <button type="submit" className='btn-signin'>Sign Up</button>
+                            <button type="submit" className='btn-signin' disabled={isLoading}>
+                                {isLoading ? 'Registrando...' : 'Crear Cuenta'}
+                            </button>
                         </div>
                     </form>
                 </div>
-                 <ToastContainer />
+                <ToastContainer />
             </div>
         </div>
     );

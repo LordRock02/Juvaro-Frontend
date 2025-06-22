@@ -1,0 +1,29 @@
+/* En: src/pages/ProductsPage.css */
+
+.products-container {
+  width: 100%; /* Le decimos que ocupe el 100% del ancho de su padre (.content-area) */
+  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+  padding: 0; /* Quitamos el padding aquí para que lo controle el .content-area */
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.products-title {
+  margin-bottom: 2rem;
+  font-size: 2.25rem;
+  color: #1F2937;
+  border-bottom: 3px solid #EC4899;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.products-grid {
+  display: grid;
+  /* Esta regla crea una cuadrícula responsiva que se ajusta al ancho disponible */
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 2rem;
+}
