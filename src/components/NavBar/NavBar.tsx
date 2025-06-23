@@ -1,5 +1,3 @@
-// En: src/components/NavBar/NavBar.tsx
-
 import { Outlet, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './NavBar.css';

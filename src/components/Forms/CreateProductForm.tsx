@@ -1,26 +1,29 @@
-// En: src/components/forms/EditProductForm.tsx
+// En: src/components/forms/CreateProductForm.tsx
 
 import React, { useState, useEffect, type FormEvent } from 'react';
 import type { ProductoDto } from '../../services/productService.types';
-// 1. Importamos el nuevo servicio y su tipo
+// 1. Importamos el servicio y el tipo de Categoría
 import { CategoryService, type CategoriaDto } from '../../services/categoryService';
-import './Form.css';
+import './Form.css'; // Reutilizamos los mismos estilos de formulario
 
-interface EditProductFormProps {
-  product: ProductoDto;
-  onSave: (updatedProduct: Partial<ProductoDto>) => void;
+// Definimos las Props que recibirá el formulario
+interface CreateProductFormProps {
+  onSave: (newProductData: Omit<ProductoDto, 'id'>) => void;
   onCancel: () => void;
 }
 
-export const EditProductForm: React.FC<EditProductFormProps> = ({ product, onSave, onCancel }) => {
-  const [formData, setFormData] = useState({
-    nombre: product.nombre ?? '',
-    descripcion: product.descripcion ?? '',
-    precio: product.precio ?? 0,
-    imagenUrl: product.imagenUrl ?? '',
-    categoriaId: product.categoriaId ?? 0,
-  });
+// Estado inicial con los campos vacíos
+const initialState = {
+  nombre: '',
+  descripcion: '',
+  precio: 0,
+  imagenUrl: '',
+  categoriaId: 0, // Empezamos con 0 o un valor inválido para forzar la selección
+};
 
+export const CreateProductForm: React.FC<CreateProductFormProps> = ({ onSave, onCancel }) => {
+  const [formData, setFormData] = useState(initialState);
+  
   // 2. Nuevo estado para guardar la lista de categorías
   const [categories, setCategories] = useState<CategoriaDto[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,21 +34,14 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({ product, onSav
       const categoryService = CategoryService.getInstance();
       const fetchedCategories = await categoryService.listarCategorias();
       setCategories(fetchedCategories);
+      // Opcional: Asigna la primera categoría como seleccionada por defecto
+      if (fetchedCategories.length > 0) {
+        setFormData(prev => ({ ...prev, categoriaId: fetchedCategories[0].id }));
+      }
     };
 
     fetchCategories();
   }, []); // El array vacío asegura que se ejecute solo una vez
-
-  // Sincroniza el formulario si el producto cambia
-  useEffect(() => {
-    setFormData({
-      nombre: product.nombre ?? '',
-      descripcion: product.descripcion ?? '',
-      precio: product.precio ?? 0,
-      imagenUrl: product.imagenUrl ?? '',
-      categoriaId: product.categoriaId ?? 0,
-    });
-  }, [product]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -57,20 +53,24 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({ product, onSav
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
+    if (formData.categoriaId === 0) {
+        alert("Por favor, seleccione una categoría.");
+        return;
+    }
     setIsLoading(true);
-    onSave({ id: product.id, ...formData });
+    onSave(formData);
     setTimeout(() => setIsLoading(false), 500);
   };
 
   return (
     <form onSubmit={handleSubmit} className="form-container">
-      {/* ... tus otros campos del formulario no cambian ... */}
+      {/* ... tus otros campos no cambian ... */}
       <div className="form-group">
         <label htmlFor="nombre">Nombre del Producto</label>
         <input type="text" id="nombre" name="nombre" value={formData.nombre} onChange={handleChange} required />
       </div>
-      
-      {/* --- 4. Reemplazamos el input de categoriaId por un <select> --- */}
+
+      {/* --- 4. Campo de Categoría ahora es un <select> --- */}
       <div className="form-group">
         <label htmlFor="categoriaId">Categoría</label>
         <select
@@ -80,7 +80,7 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({ product, onSav
           onChange={handleChange}
           required
         >
-          <option value="" disabled>Seleccione una categoría...</option>
+          <option value={0} disabled>-- Seleccione una categoría --</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>
               {category.nombre}
@@ -89,16 +89,16 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({ product, onSav
         </select>
       </div>
       
-      {/* ... el resto de tus campos (descripcion, precio, imagenUrl) ... */}
-       <div className="form-group">
+      {/* ... el resto de tus campos ... */}
+      <div className="form-group">
         <label htmlFor="descripcion">Descripción</label>
         <textarea id="descripcion" name="descripcion" value={formData.descripcion} onChange={handleChange} rows={3} required />
       </div>
-       <div className="form-group">
+      <div className="form-group">
         <label htmlFor="precio">Precio</label>
         <input type="number" id="precio" name="precio" value={formData.precio} onChange={handleChange} step="0.01" required />
       </div>
-       <div className="form-group">
+      <div className="form-group">
         <label htmlFor="imagenUrl">URL de la Imagen</label>
         <input type="text" id="imagenUrl" name="imagenUrl" value={formData.imagenUrl} onChange={handleChange} />
       </div>
@@ -108,7 +108,7 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({ product, onSav
           Cancelar
         </button>
         <button type="submit" className="integra-serv-primary-btn" disabled={isLoading}>
-          {isLoading ? 'Guardando...' : 'Guardar Cambios'}
+          {isLoading ? 'Creando...' : 'Crear Producto'}
         </button>
       </div>
     </form>

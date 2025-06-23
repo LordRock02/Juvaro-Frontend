@@ -5,6 +5,8 @@ interface UpdateProductPayload {
     nombre?: string;
     descripcion?: string;
     precio?: number;
+    categoriaId?: number;
+    imagenUrl?: string;
 }
 
 export class UpdateProductCommand implements ICommand{

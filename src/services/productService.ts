@@ -1,15 +1,15 @@
 import { ApiClientService } from '../api/ApiClientService';
 import type { ProductoDto } from './productService.types';
 
+const ENDPOINT = '/productos';
 
 interface UpdateProductoRequest {
     nombre?: string;
     descripcion?: string;
     precio?: number;
-    // ...otros campos que se puedan actualizar
+    imagenUrl?: string;
+    categoriaId?: number;
 }
-
-const ENDPOINT = '/productos';
 
 export class ProductService {
     private static instance: ProductService;
@@ -26,11 +26,9 @@ export class ProductService {
         return ProductService.instance;
     }
 
-    // --- Métodos que serán llamados por los Comandos ---
-
     public async listarProductos(): Promise<ProductoDto[]> {
         try {
-            const response = await this.apiClient.axiosInstance.get<ProductoDto[]>(ENDPOINT);
+            const response = await this.apiClient.axiosInstance.get<ProductoDto[]>('/productos');
             return response.data;
         } catch (error) {
             console.error('Error al listar productos:', error);
@@ -55,6 +53,17 @@ export class ProductService {
             await this.apiClient.axiosInstance.delete(`/productos/${id}`);
         } catch (error) {
             console.error(`Error al eliminar producto ${id}:`, error);
+            throw error;
+        }
+    }
+
+    public async registrarProducto(request: Omit<ProductoDto, 'id'>): Promise<ProductoDto> {
+        console.log(`ProductService: Registrando nuevo producto con datos:`, request);
+        try {
+            const response = await this.apiClient.axiosInstance.post<ProductoDto>('/productos/registrar', request);
+            return response.data;
+        } catch (error) {
+            console.error(`Error al registrar producto:`, error);
             throw error;
         }
     }
