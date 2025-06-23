@@ -14,7 +14,7 @@ export class ApiClientService { // <-- La palabra clave 'export' está aquí
         console.log("Creando la instancia de ApiClientService por primera y única vez...");
         
         this.axiosInstance = axios.create({
-            baseURL: 'http://localhost:8080',
+            baseURL: 'http://149.130.162.100:8080',//'http://Localhost:8080',
             headers: {
                 'Content-Type': 'application/json'
             }

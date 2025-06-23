@@ -1,5 +1,5 @@
 // En: src/context/AuthContext.tsx
-import React, { createContext, useContext, Component, type ReactNode } from 'react';
+import { createContext, useContext, Component, type ReactNode } from 'react';
 import { AuthEngine } from '../core/AuthEngine'; // Importamos nuestro motor
 import type { AuthResponse } from '../services/authService.types';
 

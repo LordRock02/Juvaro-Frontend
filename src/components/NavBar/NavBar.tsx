@@ -8,7 +8,6 @@ import * as freeSolidSvgIcons from '@fortawesome/free-solid-svg-icons';
 import { faDigg } from '@fortawesome/free-brands-svg-icons';
 import React, { useMemo } from 'react'; // 'useMemo' es útil aquí
 
-// --- 1. Importaciones para el Patrón Strategy ---
 import type { INavigationStrategy, NavigationLink } from '../../core/strategy/interfaces/INavigationStrategy';
 import { AdminNavigationStrategy } from '../../core/strategy/AdminNavigationStrategy';
 import { UserNavigationStrategy } from '../../core/strategy/UserNavigationStrategy';

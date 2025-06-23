@@ -4,5 +4,5 @@ export interface ProductoDto {
   nombre: string;
   descripcion: string;
   precio: number;
-  imageUrl: string; 
+  imagenUrl: string; 
 }
