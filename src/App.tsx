@@ -4,12 +4,12 @@ import { useAuth } from './context/AuthContext';
 import NavBar from './components/NavBar/NavBar';
 import SignIn from './components/SignIn/SignIn';
 import SignUp from './components/SignUp/SignUp';
-import ProductsPage from './pages/ProductsPage';
+import ProductsPage from './pages/ProductPage/ProductsPage';
+import DepartmentsPage from './pages/DepartmentsPage/DepartmentsPage';
 
 // Tus componentes de página placeholders se mantienen igual
 const DashboardPage = () => <h2>Contenido del Dashboard</h2>;
 const VentasPage = () => <h2>Contenido de Ventas</h2>;
-const ProduccionPage = () => <h2>Contenido de Producción</h2>;
 const UsuariosPage = () => <h2>Contenido de Usuarios</h2>;
 const MiCuentaPage = () => <h2>Contenido de Mi Cuenta</h2>;
 
@@ -42,7 +42,7 @@ function App() {
                         <Route path="dashboard" element={<DashboardPage />} />
                         <Route path="ventas" element={<VentasPage />} />
                         <Route path="productos" element={<ProductsPage />} />
-                        <Route path="produccion" element={<ProduccionPage />} />
+                        <Route path="Departamentos" element={<DepartmentsPage />} />
                         <Route path="usuarios" element={<UsuariosPage />} />
                         <Route path="mi-cuenta" element={<MiCuentaPage />} />
                         <Route path="*" element={<Navigate to="/dashboard" replace />} />

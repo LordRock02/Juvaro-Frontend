@@ -1,59 +1,60 @@
+/* Estilos generales para los formularios dentro de los modales */
 .form-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem; /* Espacio entre los grupos del formulario */
 }
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .form-group label {
-    font-weight: 500;
-    color: #374151;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #374151; /* Gris oscuro para el texto */
 }
 
 .form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #D1D5DB;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    font-family: "Lato", Arial, sans-serif;
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db; /* Borde gris claro */
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .form-group input:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: #f35587;
-    box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.2);
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #f35587; /* Color principal al enfocar */
+  box-shadow: 0 0 0 2px rgba(243, 85, 135, 0.2);
 }
 
 .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
-    margin-top: 1rem;
-    border-top: 1px solid #e5e7eb;
-    padding-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end; /* Alinea los botones a la derecha */
+  gap: 1rem; /* Espacio entre los botones */
+  margin-top: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
 }
 
 .btn-secondary {
-    background-color: #F3F4F6;
-    color: #4B5563;
-    border: 1px solid #D1D5DB;
-    padding: 0.6rem 1.2rem;
-    border-radius: 50px;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 15px;
-    transition: background-color 0.2s;
+  background-color: #fff;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  font-size: 15px;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .btn-secondary:hover {
-    background-color: #E5E7EB;
+  background-color: #f9fafb;
 }

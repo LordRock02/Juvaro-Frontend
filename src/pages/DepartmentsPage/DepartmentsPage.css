@@ -1,0 +1,103 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+/* Reutilizamos el estilo del título */
+.page-title {
+  margin-bottom: 0;
+  font-size: 2.25rem;
+  color: #1F2937;
+  border-bottom: 3px solid #EC4899;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+/* Estilos para los botones de la cabecera */
+.header-actions .integra-serv-primary-btn,
+.header-actions .btn-secondary {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.7rem 1.5rem;
+}
+
+.departments-page-content {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    min-height: 400px;
+    border: 1px solid #e5e7eb;
+}
+
+.departments-page-content p {
+    color: #6B7280;
+    font-size: 1.1rem;
+}
+
+.department-selector-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.selector-label {
+  font-size: 15px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.department-selector {
+  /* Apariencia similar a tus botones */
+  box-shadow: none !important;
+  font-size: 15px;
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 1px solid #d1d5db; /* Borde gris */
+  background-color: #fff;
+  height: fit-content;
+  -webkit-appearance: none; /* Oculta la flecha por defecto en algunos navegadores */
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+  padding-right: 2.5rem; /* Espacio para la flecha */
+}
+
+.add-stock-container {
+  /* Añade un margen en la parte inferior para separarlo del contenido */
+  margin-bottom: 2rem;
+  
+  /* Centra el botón horizontalmente (opcional, pero mejora la apariencia) */
+  display: flex;
+  justify-content: flex-start; /* Lo alinea a la izquierda */
+}
+
+/* --- Estilos para el formulario en el modal --- */
+.add-stock-form .form-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.add-stock-form .form-group label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.stock-input {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 1rem;
+}

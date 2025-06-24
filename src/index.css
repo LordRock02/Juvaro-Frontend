@@ -7,24 +7,18 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Lato", Arial, sans-serif;
-
 }
 
-html,
-body,
-#root {
-  display: flex;
-  width: 100vw;
-  min-height: 100vh;
-  height: auto;
-  /* gap: 1rem; */
+html, body, #root {
+  width: 100%;
+  height: 100%;
+  background-color: #F9FAFB; /* Mueve el color de fondo aquí */
 }
-/* .sombreado {
-  border-radius: 50px;
-  -webkit-box-shadow: 0 0 14px 1px #a3a3a3;
-  -moz-box-shadow: 0 0 14px 1px #a3a3a3;
-  box-shadow: 0 0 14px 1px #a3a3a3;
-} */
+
+body {
+    overflow-x: hidden; /* Evita cualquier scroll horizontal accidental */
+}
+
 /* Tabla Integra Servicios */
 .integra-serv-tabla {
   font-size: 1.5rem;
@@ -57,12 +51,8 @@ body,
 /* card-inf Integra Servicios*/
 .card-info {
   display: flex;
-  /* justify-content: space-between; */
-  /* width: fit-content;
-  height: fit-content; */
   background-color: #fff;
   align-items: center;
-  /* position: relative; */
   gap: 10px;
   padding: 20px 25px;
   width: 300px;
@@ -72,12 +62,10 @@ body,
   text-align: center;
   color: #808080;
 }
-
 .card-info div{
   width: 100%;
   display: flex;
   flex-direction: column;
-  /* align-items: flex-start; */
   padding: 20px 0;
   justify-content: center;
 }
@@ -89,10 +77,36 @@ body,
   font-size: 1.4rem;
 }
 .card-info span {
-  /* margin: auto 0 auto 30px; */
-  /* position: absolute; */
   right: 30px;
   top: 30%;
   color: #808080;
   font-size: 3.5rem;
+}
+/* Estilos GENÉRICOS para un selector personalizado */
+.styled-selector-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.styled-selector-label {
+  font-size: 15px;
+  color: #374151;
+  font-weight: 500;
+}
+.styled-selector {
+  box-shadow: none !important;
+  font-size: 15px;
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 1px solid #d1d5db;
+  background-color: #fff;
+  height: fit-content;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+  padding-right: 2.5rem;
 }

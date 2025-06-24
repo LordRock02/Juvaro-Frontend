@@ -1,15 +1,8 @@
 import React from 'react';
 import type { ProductoDto } from '../../services/productService.types';
-// Ya no necesitamos las interfaces de Strategy// Podemos mantener este tipo para los callbacks
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import './ProductCard.css';
-
-// 1. Actualizamos las Props
-// En lugar de una estrategia, ahora recibe directamente el objeto del usuario.
-interface ProductCardProps {
-  product: ProductoDto;
-  currentUser: any | null;
-  callbacks: ActionCallbacks;
-}
 
 export interface ActionCallbacks {
   onAddToCart?: () => void;
@@ -17,7 +10,25 @@ export interface ActionCallbacks {
   onDelete?: () => void;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, currentUser, callbacks }) => {
+interface ProductCardProps {
+  product: ProductoDto;
+  currentUser: any | null;
+  callbacks: ActionCallbacks;
+  isStockView?: boolean;
+  stockQuantity?: number;
+  onStockIncrement?: () => void;
+  onStockDecrement?: () => void;
+}
+
+export const ProductCard: React.FC<ProductCardProps> = ({ 
+  product, 
+  currentUser, 
+  callbacks, 
+  isStockView = false,
+  stockQuantity,
+  onStockIncrement,
+  onStockDecrement
+}) => {
   const imageUrl = product.imagenUrl || `https://placehold.co/400x400/f35588/FFFFFF?text=${encodeURIComponent(product.nombre)}`;
 
   const formatPrice = (price: number) => {
@@ -42,20 +53,28 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, currentUser, 
         <p className="product-description">{product.descripcion}</p>
         <p className="product-price">{formatPrice(product.precio)}</p>
         
-        {/* --- 2. Lógica de Renderizado Condicional --- */}
         <div className="product-actions">
-          {currentUser?.rol === 'ROLE_ADMIN' ? (
-            // Si es Admin, muestra los botones de Editar y Eliminar
+          {isStockView ? (
+            <div className="stock-control">
+              <button className="stock-action-btn stock-decrement-btn" onClick={onStockDecrement}>
+                <FontAwesomeIcon icon={faMinus} />
+              </button>
+              {/* --- MODIFICADO: Ahora solo muestra el número --- */}
+              <span className="stock-quantity">{stockQuantity}</span>
+              <button className="stock-action-btn stock-increment-btn" onClick={onStockIncrement}>
+                <FontAwesomeIcon icon={faPlus} />
+              </button>
+            </div>
+          ) : currentUser?.rol === 'ROLE_ADMIN' ? (
             <>
               <button className="edit-btn" onClick={callbacks.onEdit}>
-                  Editar
+                Editar
               </button>
               <button className="delete-btn" onClick={callbacks.onDelete}>
-                  Eliminar
+                Eliminar
               </button>
             </>
           ) : (
-            // Si no, muestra el botón de Agregar
             <button 
               className="integra-serv-primary-btn" 
               onClick={callbacks.onAddToCart}

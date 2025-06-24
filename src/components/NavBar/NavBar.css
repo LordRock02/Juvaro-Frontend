@@ -1,19 +1,10 @@
-.layout-container {
-  display: flex;
-  width: 100%;
-}
-
-/* --- Área de Contenido Principal --- */
-.content-area {
-  flex-grow: 1; /* ¡LA CLAVE! Le dice a esta área que crezca */
-  padding: 2rem;
-  overflow-y: auto; /* Scroll si el contenido es muy alto */
-  background-color: #F9FAFB; /* Un fondo suave para el contenido */
-}
-
-
-/* --- Barra de Navegación (Tus estilos originales) --- */
+/* --- Barra de Navegación --- */
 nav {
+  /* --- AÑADIDO: Clave para mantener la barra fija --- */
+  position: sticky; /* Hace que la barra se "pegue" al viewport */
+  top: 0;           /* La pega en la parte superior */
+  align-self: flex-start; /* Se asegura de que se alinee correctamente en el contenedor flex */
+
   min-width: 300px;
   height: 100vh; 
   background: linear-gradient(135deg, #f75959 0%, #f35587 100%);
@@ -22,6 +13,22 @@ nav {
   padding: 1rem; 
   z-index: 1;
   flex-shrink: 0; /* Asegura que la barra lateral no se encoja */
+}
+
+/* El resto de tus estilos de NavBar (.logo, .nav__links, etc.) se mantienen igual */
+
+.layout-container {
+  display: flex;
+  width: 100%;
+  align-items: flex-start; /* Alinea los items al inicio */
+}
+
+.content-area {
+  flex-grow: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  height: 100vh; /* Asegura que el área de contenido tenga altura para hacer scroll */
+  width: 0; /* Corrección para Flexbox */
 }
 
 nav .logo {
@@ -53,10 +60,9 @@ nav .logo:hover {
   display: flex;
   flex-direction: column;
   padding-top: 25px;
-  gap: 0.75rem; /* Reducimos el espacio entre opciones */
+  gap: 0.75rem;
 }
 
-/* Estilo para la barra de scroll */
 .nav__links::-webkit-scrollbar {
   width: 8px;
 }
@@ -69,18 +75,17 @@ nav .logo:hover {
   text-decoration: none;
 }
 
-/* --- CAMBIOS PARA REDUCIR EL TAMAÑO --- */
 .option {
   color: #fff;
   text-decoration: none;
   list-style: none;
   width: 100%;
   display: flex;
-  padding: 0.75rem 1.5rem; /* Padding reducido */
+  padding: 0.75rem 1.5rem;
   justify-content: flex-start;
   align-items: center;
-  font-size: 16px; /* Tamaño de fuente reducido */
-  border-radius: 12px; /* Un radio más moderno */
+  font-size: 16px;
+  border-radius: 12px;
   transition: 0.3s;
   flex-shrink: 0; 
 }
@@ -91,8 +96,8 @@ nav .logo:hover {
 }
 
 .option .icono {
-  font-size: 22px; /* Tamaño de ícono reducido */
-  margin-right: 1rem; /* Margen ajustado */
+  font-size: 22px;
+  margin-right: 1rem;
 }
 
 .nav__links .selected {
@@ -101,7 +106,6 @@ nav .logo:hover {
   cursor: default;
 }
 
-/* Contenedor de los botones inferiores */
 nav > div {
-    flex-shrink: 0; /* Evita que este contenedor se encoja */
+    flex-shrink: 0;
 }

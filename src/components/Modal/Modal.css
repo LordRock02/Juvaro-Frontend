@@ -60,6 +60,14 @@
   color: #374151;
 }
 
+.modal-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb; /* Línea separadora */
+  display: flex;
+  justify-content: center; /* Centra el botón */
+}
+
 .modal-body {
   
 }

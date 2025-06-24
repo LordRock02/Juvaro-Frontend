@@ -8,7 +8,7 @@ export class AdminNavigationStrategy implements INavigationStrategy {
             { path: '/dashboard', label: 'Dashboard', icon: freeSolidSvgIcons.faChartLine },
             { path: '/ventas', label: 'Ventas', icon: freeSolidSvgIcons.faShoppingCart },
             { path: '/productos', label: 'Productos', icon: freeSolidSvgIcons.faBoxOpen },
-            { path: '/produccion', label: 'Producción', icon: freeSolidSvgIcons.faIndustry },
+            { path: '/departamentos', label: 'Departamentos', icon: freeSolidSvgIcons.faIndustry },
             { path: '/usuarios', label: 'Usuarios', icon: freeSolidSvgIcons.faUsers },
         ];
     }

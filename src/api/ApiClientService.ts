@@ -6,6 +6,9 @@ import axios, { type AxiosInstance } from 'axios';
  * Esta clase implementa el Patrón Singleton de forma "clásica".
  * Se usa una EXPORTACIÓN NOMBRADA para que sea explícito qué se está compartiendo.
  */
+
+const API_URL= 'http://149.130.162.100:8080';//'http://Localhost:8080',
+
 export class ApiClientService { // <-- La palabra clave 'export' está aquí
     private static instance: ApiClientService;
     public readonly axiosInstance: AxiosInstance;
@@ -14,7 +17,7 @@ export class ApiClientService { // <-- La palabra clave 'export' está aquí
         console.log("Creando la instancia de ApiClientService por primera y única vez...");
         
         this.axiosInstance = axios.create({
-            baseURL: 'http://149.130.162.100:8080',//'http://Localhost:8080',
+            baseURL: API_URL,
             headers: {
                 'Content-Type': 'application/json'
             }

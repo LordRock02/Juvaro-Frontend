@@ -8,11 +8,18 @@
   flex-direction: column;
   height: 100%;
 
-  /* Límites de tamaño para la tarjeta */
-  min-width: 250px;
-  max-width: 340px;
+  /* --- MODIFICADO PARA COMPORTAMIENTO RESPONSIVO --- */
+
+  /* 1. La tarjeta intentará ocupar todo el ancho de su contenedor en la cuadrícula */
+  width: 100%; 
   
-  /* Centra la tarjeta dentro de su celda en la cuadrícula */
+  /* 2. Este es el "tamaño por defecto". No crecerá más de 280px. */
+  max-width: 250px; 
+  
+  /* 3. Este es el límite al reducirse. No se hará más pequeña de 220px. */
+  min-width: 196px;
+  
+  /* Centra la tarjeta si el espacio de la cuadrícula es mayor que su max-width */
   margin: 0 auto; 
 }
 
@@ -122,4 +129,56 @@
     background-color: #FECACA;
     color: #B91C1C;
     border-color: #FCA5A5;
+}
+/* --- ESTILOS PARA EL CONTROL DE STOCK --- */
+
+.stock-control {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.stock-action-btn {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.stock-quantity {
+  font-size: 1.1rem; /* Un poco más grande para destacar */
+  font-weight: 700;  /* Más grueso */
+  color: #1f2937;
+  padding: 0 0.5rem;
+  /* --- AÑADIDO: Asegura que el texto esté centrado --- */
+  text-align: center;
+  /* Ocupa el espacio disponible para centrarse correctamente */
+  flex-grow: 1; 
+}
+
+/* Colores para los botones de stock */
+.stock-decrement-btn {
+    background-color: #FFFFFF;
+    color: #4B5563;
+    border: 1px solid #D1D5DB;
+}
+
+.stock-decrement-btn:hover {
+    background-color: #F9FAFB;
+}
+
+.stock-increment-btn {
+    background-color: #FEE2E2;
+    color: #DC2626;
+    border: 1px solid #FECACA;
+}
+
+.stock-increment-btn:hover {
+    background-color: #FECACA;
 }

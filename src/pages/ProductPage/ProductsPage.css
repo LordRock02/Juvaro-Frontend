@@ -1,0 +1,99 @@
+.products-grid {
+  display: grid;
+  /* --- MODIFICADO: Cuadrícula responsiva con límites --- */
+  /* El navegador intentará crear columnas de 1fr (fracción del espacio),
+     pero cada columna no será más pequeña que 220px. 
+     Esto crea un efecto responsivo natural. */
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 2rem;
+}
+
+/* --- NUEVO: Media Queries para control de columnas --- */
+
+/* Para pantallas grandes (más de 1600px de ancho) */
+@media (min-width: 1600px) {
+  .products-grid {
+    /* Forzamos a que haya un máximo de 6 columnas */
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+/* Para pantallas medianas (entre 1200px y 1599px de ancho) */
+/* Este es un ejemplo, puedes ajustar los valores a tu gusto */
+@media (min-width: 1200px) and (max-width: 1599px) {
+  .products-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+/* Para pantallas más pequeñas (menos de 1199px de ancho) */
+/* El comportamiento por defecto de auto-fill se encargará, 
+   pero aquí forzamos un mínimo de 4 columnas si hay espacio */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .products-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+
+.products-container {
+  box-sizing: border-box;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem; 
+}
+
+.products-title {
+  margin-bottom: 0; 
+  font-size: 2.25rem;
+  color: #1F2937;
+  border-bottom: 3px solid #EC4899;
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 3rem;
+}
+
+.pagination-btn {
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  color: #374151;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pagination-btn.active {
+  background-color: #f35587;
+  color: #fff;
+  border-color: #f35587;
+  font-weight: bold;
+}
