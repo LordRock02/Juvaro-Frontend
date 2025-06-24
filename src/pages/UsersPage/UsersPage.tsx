@@ -88,14 +88,14 @@ const UsersPage: React.FC = () => {
             <div className="users-page-container">
                 <div className="page-header">
                     <h1 className="page-title">Gestionar Usuarios</h1>
-                    {currentUser?.rol === 'ROLE_ADMIN' && (
+                    {/* {currentUser?.rol === 'ROLE_ADMIN' && (
                         <button 
                             className="integra-serv-primary-btn" 
                             onClick={() => setIsCreateModalOpen(true)}
                         >
                             Crear Usuario
                         </button>
-                    )}
+                    )} */}
                 </div>
 
                 <div className="table-container">

@@ -10,14 +10,22 @@ import StorePage  from './pages/StorePage/StorePage';
 import OrdersPage from './pages/OrdersPage/OrdersPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import SalesPage from './pages/SalesPage/SalesPage';
-// --- CORRECCIÓN: Asegurándose de que la ruta de importación sea correcta ---
 import UsersPage from './pages/UsersPage/UsersPage'; 
 import { CheckoutPage } from './pages/CheckoutPage/CheckoutPage';
 
-// Tus componentes de página placeholders
-const DashboardPage = () => <h2>Contenido del Dashboard</h2>;
-const VentasPage = () => <h2>Contenido de Ventas</h2>;
-const MiCuentaPage = () => <h2>Contenido de Mi Cuenta</h2>;
+// Componente para la página de inicio (puede ser un Dashboard o una bienvenida)
+
+// --- COMPONENTE DE REDIRECCIÓN POR ROL ---
+// Este componente decide a dónde enviar al usuario basado en su rol.
+const HomeRedirect = () => {
+    const { currentUser } = useAuth();
+    // Verifica si el usuario es administrador (asumiendo que rol 1 es ADMIN)
+    const isAdmin = currentUser?.usuario?.rol === 1; 
+    // Define la ruta por defecto según el rol
+    const defaultPath = isAdmin ? '/ventas' : '/store';
+    
+    return <Navigate to={defaultPath} replace />;
+};
 
 const ProtectedRoutes = () => {
     const { isLoggedIn } = useAuth();
@@ -37,7 +45,9 @@ function App() {
                         {/* --- RUTAS PROTEGIDAS --- */}
                         <Route element={<ProtectedRoutes />}>
                             <Route path="/" element={<NavBar />}>
-                                <Route index element={<Navigate to="/dashboard" replace />} />
+                                {/* --- RUTA DE INICIO REDIRIGE SEGÚN ROL --- */}
+                                <Route index element={<HomeRedirect />} />
+                                
                                 <Route path="ventas" element={<SalesPage />} />
                                 <Route path="ordenes" element={<OrdersPage />} />
                                 <Route path="productos" element={<ProductsPage />} />
@@ -45,11 +55,10 @@ function App() {
                                 <Route path="usuarios" element={<UsersPage />} />
                                 <Route path="mi-cuenta" element={<ProfilePage />} />
                                 <Route path="store" element={<StorePage />} />
-                                
-                                {/* --- NUEVO: Ruta para la página de checkout --- */}
                                 <Route path="checkout" element={<CheckoutPage />} />
 
-                                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                                {/* Redirección para cualquier ruta no encontrada */}
+                                <Route path="*" element={<HomeRedirect />} />
                             </Route>
                         </Route>
                     </Routes>

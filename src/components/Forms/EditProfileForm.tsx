@@ -11,10 +11,12 @@ interface EditProfileFormProps {
 export const EditProfileForm: React.FC<EditProfileFormProps> = ({ onSave, onCancel }) => {
     const { currentUser } = useAuth();
     
-    // El estado del formulario se inicializa con los datos del usuario actual
+    // El estado del formulario ahora incluye todos los campos necesarios
     const [formData, setFormData] = useState({
-        fullname: currentUser?.nombre || '',
-        email: currentUser?.email || '',
+        fullname: currentUser?.usuario.fullname || '',
+        email: currentUser?.usuario.email || '',
+        // Se añade la cédula, asegurándonos de que sea un número
+        cedula: parseInt(currentUser?.usuario.cedula || '0', 10),
         password: '' // El campo de la contraseña siempre empieza vacío
     });
 
@@ -26,10 +28,12 @@ export const EditProfileForm: React.FC<EditProfileFormProps> = ({ onSave, onCanc
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Se crea el objeto de la petición solo con los datos que se van a enviar
+        // Se crea el objeto de la petición
         const dataToSave: Partial<UpdateUsuarioRequest> = {
             fullname: formData.fullname,
-            email: formData.email
+            email: formData.email,
+            // Se convierte la cédula a número antes de enviarla
+            cedula: Number(formData.cedula)
         };
 
         // Solo se añade la contraseña al objeto si el usuario ha escrito algo
@@ -49,6 +53,11 @@ export const EditProfileForm: React.FC<EditProfileFormProps> = ({ onSave, onCanc
             <div className="form-group">
                 <label>Email</label>
                 <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+            </div>
+            {/* Se añade el campo para la cédula */}
+            <div className="form-group">
+                <label>Cédula</label>
+                <input type="number" name="cedula" value={formData.cedula} onChange={handleChange} required />
             </div>
             <div className="form-group">
                 <label>Nueva Contraseña (opcional)</label>
