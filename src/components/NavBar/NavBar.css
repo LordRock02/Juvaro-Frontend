@@ -1,34 +1,30 @@
 /* --- Barra de Navegación --- */
 nav {
-  /* --- AÑADIDO: Clave para mantener la barra fija --- */
-  position: sticky; /* Hace que la barra se "pegue" al viewport */
-  top: 0;           /* La pega en la parte superior */
-  align-self: flex-start; /* Se asegura de que se alinee correctamente en el contenedor flex */
-
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
   min-width: 300px;
-  height: 100vh; 
+  height: 100vh;
   background: linear-gradient(135deg, #f75959 0%, #f35587 100%);
   display: flex;
-  flex-direction: column; 
-  padding: 1rem; 
+  flex-direction: column;
+  padding: 1rem;
   z-index: 1;
-  flex-shrink: 0; /* Asegura que la barra lateral no se encoja */
+  flex-shrink: 0;
 }
-
-/* El resto de tus estilos de NavBar (.logo, .nav__links, etc.) se mantienen igual */
 
 .layout-container {
   display: flex;
   width: 100%;
-  align-items: flex-start; /* Alinea los items al inicio */
+  align-items: flex-start;
 }
 
 .content-area {
   flex-grow: 1;
   padding: 2rem;
   overflow-y: auto;
-  height: 100vh; /* Asegura que el área de contenido tenga altura para hacer scroll */
-  width: 0; /* Corrección para Flexbox */
+  height: 100vh;
+  width: 0;
 }
 
 nav .logo {
@@ -39,10 +35,10 @@ nav .logo {
   color: #fff;
   text-decoration: none;
   font-size: 20px;
-  padding: 1rem 0; 
+  padding: 1rem 0;
   cursor: pointer;
   transition: all 0.5s;
-  flex-shrink: 0; 
+  flex-shrink: 0;
 }
 
 nav .logo .icono {
@@ -55,8 +51,8 @@ nav .logo:hover {
 }
 
 .nav__links {
-  flex-grow: 1; 
-  overflow-y: auto;   
+  flex-grow: 1;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   padding-top: 25px;
@@ -66,6 +62,7 @@ nav .logo:hover {
 .nav__links::-webkit-scrollbar {
   width: 8px;
 }
+
 .nav__links::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.3);
   border-radius: 4px;
@@ -87,7 +84,7 @@ nav .logo:hover {
   font-size: 16px;
   border-radius: 12px;
   transition: 0.3s;
-  flex-shrink: 0; 
+  flex-shrink: 0;
 }
 
 .unselected:hover {
@@ -107,5 +104,54 @@ nav .logo:hover {
 }
 
 nav > div {
-    flex-shrink: 0;
+  flex-shrink: 0;
+}
+
+/* --- Estilos del Botón Flotante del Carrito --- */
+.floating-cart-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #f75959 0%, #f35587 100%);
+  color: white;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  z-index: 1001;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.floating-cart-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Clase para ocultar el botón cuando el panel del carrito está abierto */
+.floating-cart-btn.hidden {
+  transform: scale(0);
+  opacity: 0;
+  cursor: default;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: white;
+  color: #f35587;
+  border: 2px solid #f35587;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
 }

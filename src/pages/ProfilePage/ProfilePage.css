@@ -1,0 +1,79 @@
+.profile-page-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem;
+    height: 100%;
+}
+
+.profile-card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 800px;
+    padding: 2rem;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.profile-header h2 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #f35588; /* Color rosado de tus botones primarios */
+}
+
+.edit-profile-btn {
+    background: none;
+    border: none;
+    color: #a0a0a0;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.edit-profile-btn:hover {
+    color: #333;
+}
+
+.profile-body {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.avatar-container {
+    flex-shrink: 0;
+}
+
+.avatar-icon {
+    font-size: 120px; /* Tamaño grande para el ícono de usuario */
+    color: #e0e0e0;
+}
+
+.details-container {
+    flex-grow: 1;
+    display: grid;
+    /* CORRECCIÓN: Ahora esto funcionará porque los 'span' son hijos directos */
+    grid-template-columns: 120px 1fr; 
+    gap: 1.25rem;
+    align-items: center; /* Centra verticalmente los items en cada fila */
+}
+
+/* Elminamos el estilo para el .detail-item que ya no existe */
+
+.detail-label {
+    font-weight: 600;
+    color: #333;
+}
+
+.detail-value {
+    color: #666;
+}

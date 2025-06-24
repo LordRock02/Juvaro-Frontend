@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, type FormEvent } from 'react';
 import type { ProductoDto } from '../../services/productService.types';
-// 1. Importamos el nuevo servicio y su tipo
 import { CategoryService, type CategoriaDto } from '../../services/categoryService';
 import './Form.css';
 
@@ -13,19 +12,19 @@ interface EditProductFormProps {
 }
 
 export const EditProductForm: React.FC<EditProductFormProps> = ({ product, onSave, onCancel }) => {
+  // CORRECCIÓN 1: El precio ahora se maneja como string en el estado del formulario
+  // para permitir la entrada de decimales.
   const [formData, setFormData] = useState({
     nombre: product.nombre ?? '',
     descripcion: product.descripcion ?? '',
-    precio: product.precio ?? 0,
+    precio: String(product.precio ?? 0),
     imagenUrl: product.imagenUrl ?? '',
     categoriaId: product.categoriaId ?? 0,
   });
 
-  // 2. Nuevo estado para guardar la lista de categorías
   const [categories, setCategories] = useState<CategoriaDto[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // 3. useEffect para cargar las categorías cuando el componente se monta
   useEffect(() => {
     const fetchCategories = async () => {
       const categoryService = CategoryService.getInstance();
@@ -34,43 +33,59 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({ product, onSav
     };
 
     fetchCategories();
-  }, []); // El array vacío asegura que se ejecute solo una vez
+  }, []);
 
   // Sincroniza el formulario si el producto cambia
   useEffect(() => {
     setFormData({
       nombre: product.nombre ?? '',
       descripcion: product.descripcion ?? '',
-      precio: product.precio ?? 0,
+      precio: String(product.precio ?? 0), // También se actualiza como string
       imagenUrl: product.imagenUrl ?? '',
       categoriaId: product.categoriaId ?? 0,
     });
   }, [product]);
 
+  // CORRECCIÓN 2: La función ahora es más simple y maneja correctamente los tipos.
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'precio' || name === 'categoriaId' ? parseInt(value, 10) || 0 : value,
-    }));
+
+    if (name === 'categoriaId') {
+      // El ID de categoría sigue siendo un número entero.
+      setFormData(prev => ({
+        ...prev,
+        [name]: parseInt(value, 10) || 0,
+      }));
+    } else {
+      // El resto de los campos, incluido el precio, se actualizan como texto.
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    onSave({ id: product.id, ...formData });
+    
+    // CORRECCIÓN 3: Al guardar, el precio (que es un string) se convierte a número decimal.
+    const dataToSave = {
+        ...formData,
+        precio: parseFloat(formData.precio) || 0
+    };
+
+    onSave({ id: product.id, ...dataToSave });
     setTimeout(() => setIsLoading(false), 500);
   };
 
   return (
     <form onSubmit={handleSubmit} className="form-container">
-      {/* ... tus otros campos del formulario no cambian ... */}
       <div className="form-group">
         <label htmlFor="nombre">Nombre del Producto</label>
         <input type="text" id="nombre" name="nombre" value={formData.nombre} onChange={handleChange} required />
       </div>
       
-      {/* --- 4. Reemplazamos el input de categoriaId por un <select> --- */}
       <div className="form-group">
         <label htmlFor="categoriaId">Categoría</label>
         <select
@@ -89,7 +104,6 @@ export const EditProductForm: React.FC<EditProductFormProps> = ({ product, onSav
         </select>
       </div>
       
-      {/* ... el resto de tus campos (descripcion, precio, imagenUrl) ... */}
        <div className="form-group">
         <label htmlFor="descripcion">Descripción</label>
         <textarea id="descripcion" name="descripcion" value={formData.descripcion} onChange={handleChange} rows={3} required />

@@ -14,7 +14,7 @@ import { CreateProductCommand } from '../../core/command/CreateProductCommand';
 import { DeleteProductCommand } from '../../core/command/DeleteProductCommand';
 
 // --- MODIFICADO: Ahora se muestran 24 productos por página ---
-const PRODUCTS_PER_PAGE = 24;
+const PRODUCTS_PER_PAGE = 30;
 
 const ProductsPage: React.FC = () => {
     const [products, setProducts] = useState<ProductoDto[]>([]);

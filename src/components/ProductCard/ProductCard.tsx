@@ -1,13 +1,15 @@
 import React from 'react';
 import type { ProductoDto } from '../../services/productService.types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faMinus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import './ProductCard.css';
 
 export interface ActionCallbacks {
   onAddToCart?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
+  // --- NUEVO: Callback unificado para cambiar la cantidad ---
+  onQuantityChange?: (newQuantity: number) => void;
 }
 
 interface ProductCardProps {
@@ -18,6 +20,8 @@ interface ProductCardProps {
   stockQuantity?: number;
   onStockIncrement?: () => void;
   onStockDecrement?: () => void;
+  // --- NUEVO: Prop para saber la cantidad en el carrito ---
+  cartQuantity?: number;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ 
@@ -27,7 +31,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   isStockView = false,
   stockQuantity,
   onStockIncrement,
-  onStockDecrement
+  onStockDecrement,
+  cartQuantity
 }) => {
   const imageUrl = product.imagenUrl || `https://placehold.co/400x400/f35588/FFFFFF?text=${encodeURIComponent(product.nombre)}`;
 
@@ -59,7 +64,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               <button className="stock-action-btn stock-decrement-btn" onClick={onStockDecrement}>
                 <FontAwesomeIcon icon={faMinus} />
               </button>
-              {/* --- MODIFICADO: Ahora solo muestra el número --- */}
               <span className="stock-quantity">{stockQuantity}</span>
               <button className="stock-action-btn stock-increment-btn" onClick={onStockIncrement}>
                 <FontAwesomeIcon icon={faPlus} />
@@ -74,7 +78,26 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 Eliminar
               </button>
             </>
+          ) : cartQuantity && cartQuantity > 0 ? (
+             // --- NUEVO: Vista para cuando el producto está en el carrito ---
+             <div className="stock-control">
+                {/* Botón de eliminar (pone la cantidad a 0) */}
+                <button 
+                  className="stock-action-btn stock-decrement-btn" 
+                  onClick={() => callbacks.onQuantityChange?.(cartQuantity - 1)}
+                >
+                  <FontAwesomeIcon icon={cartQuantity === 1 ? faTrash : faMinus} />
+                </button>
+                <span className="stock-quantity">{cartQuantity}</span>
+                <button 
+                  className="stock-action-btn stock-increment-btn" 
+                  onClick={() => callbacks.onQuantityChange?.(cartQuantity + 1)}
+                >
+                  <FontAwesomeIcon icon={faPlus} />
+                </button>
+            </div>
           ) : (
+             // --- Vista por defecto para el usuario ---
             <button 
               className="integra-serv-primary-btn" 
               onClick={callbacks.onAddToCart}
